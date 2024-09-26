@@ -24,7 +24,7 @@ export default function Layout(props: LayoutProps) {
 
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="overflow-x-hidden">{children}</body>
     </html>
   )
 }

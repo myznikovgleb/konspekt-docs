@@ -79,7 +79,7 @@ const FeedbackForm = () => {
   }
 
   return (
-    <div className="card w-96 text-lg shadow-xl">
+    <div className="card w-96 text-lg md:shadow-xl">
       <form onSubmit={onSubmit} className="card-body gap-6">
         <div className="flex flex-col gap-2">
           <label htmlFor="email" className="label cursor-pointer font-medium">
