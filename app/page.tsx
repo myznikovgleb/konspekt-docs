@@ -1,12 +1,12 @@
 import { Layout } from '@/src/shared/ui'
+import { FeedbackSection } from '@/src/widgets/feedback'
+import { HeroSection } from '@/src/widgets/hero'
 
 export default function Page() {
   return (
     <Layout>
-      <div className="flex flex-col items-center gap-6">
-        <h1 className="text-4xl font-semibold">Konspekt Docs</h1>
-        <span className="text-5xl">📝</span>
-      </div>
+      <HeroSection />
+      <FeedbackSection />
     </Layout>
   )
 }
