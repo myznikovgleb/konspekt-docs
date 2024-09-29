@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { Section } from '@/src/shared/ui'
 
 const HeroSection = () => {
@@ -9,7 +11,13 @@ const HeroSection = () => {
             Konspekt Docs
           </h1>
           <p className="text-2xl text-primary-content md:text-4xl">
-            Documentation for Konspekt App
+            Documentation for{' '}
+            <Link
+              href="https://konspekt.vercel.app/"
+              className="link rounded-lg hover:opacity-80"
+            >
+              Konspekt App
+            </Link>
           </p>
         </div>
         <span className="text-8xl">📝</span>
