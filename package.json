@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroicons/react": "^2.1.5",
     "@radix-ui/react-slider": "^1.2.0",
+    "@radix-ui/react-tooltip": "^1.1.2",
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
     "google-auth-library": "^9.14.1",

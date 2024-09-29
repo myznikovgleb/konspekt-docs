@@ -3,6 +3,7 @@
 import { CheckIcon } from '@heroicons/react/24/outline'
 import { PaperAirplaneIcon, StarIcon } from '@heroicons/react/24/solid'
 import * as Slider from '@radix-ui/react-slider'
+import * as Tooltip from '@radix-ui/react-tooltip'
 import axios from 'axios'
 import { clsx } from 'clsx'
 import { useState } from 'react'
@@ -105,7 +106,7 @@ const FeedbackForm = () => {
   }
 
   return (
-    <div className="card w-96 text-lg md:shadow-xl">
+    <div className="card w-96 text-lg md:shadow-lg md:shadow-base-300">
       <form onSubmit={onSubmit} className="card-body gap-6">
         <div className="flex flex-col gap-2">
           <label htmlFor="email" className="label cursor-pointer font-medium">
@@ -177,21 +178,44 @@ const FeedbackForm = () => {
           />
         </div>
         {match(state)
-          .with('edit', () => (
-            <div
-              className={clsx(error.isError && 'tooltip')}
-              data-tip={error.message}
-            >
-              <button
-                disabled={error.isError}
-                type="submit"
-                className="btn btn-primary btn-lg w-full"
-              >
+          .with('edit', () =>
+            error.isError ? (
+              <Tooltip.Provider>
+                <Tooltip.Root>
+                  <Tooltip.Trigger asChild>
+                    <div>
+                      <button
+                        type="submit"
+                        disabled
+                        className="btn btn-primary btn-lg w-full"
+                      >
+                        <PaperAirplaneIcon className="size-6 rotate-180 stroke-[2.5]" />
+                        <span>Send</span>
+                      </button>
+                    </div>
+                  </Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Content
+                      className="select-none rounded-lg bg-base-100 px-4 py-2 text-base-content/80 shadow-lg shadow-base-300"
+                      sideOffset={8}
+                    >
+                      {error.message}
+                      <Tooltip.Arrow
+                        className="fill-base-100"
+                        width={16}
+                        height={8}
+                      />
+                    </Tooltip.Content>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              </Tooltip.Provider>
+            ) : (
+              <button type="submit" className="btn btn-primary btn-lg w-full">
                 <PaperAirplaneIcon className="size-6 rotate-180 stroke-[2.5]" />
                 <span>Send</span>
               </button>
-            </div>
-          ))
+            )
+          )
           .with('pending', () => (
             <div className="btn btn-primary btn-lg">
               <span className="loading loading-spinner loading-sm" />
