@@ -6,7 +6,7 @@ const Layout = (props: LayoutProps) => {
   const { children } = props
 
   return (
-    <main className="flex w-screen flex-col items-center justify-center overflow-x-hidden">
+    <main className="flex w-full flex-col items-center justify-center">
       {children}
     </main>
   )

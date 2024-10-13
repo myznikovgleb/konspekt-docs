@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .gradient {
+    &.yellow-orange {
+      @apply bg-gradient-to-tr from-yellow-300 to-orange-500;
+    }
+    &.blue-emerald {
+      @apply bg-gradient-to-tr from-blue-300 to-emerald-400;
+    }
+    &.pink-indigo {
+      @apply bg-gradient-to-tr from-pink-300 to-indigo-500;
+    }
+  }
+
+  .gradient-border {
+    &.yellow-orange {
+      @apply bg-orange-500;
+    }
+    &.blue-emerald {
+      @apply bg-emerald-400;
+    }
+    &.pink-indigo {
+      @apply bg-indigo-500;
+    }
+  }
+}

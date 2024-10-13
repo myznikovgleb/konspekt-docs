@@ -6,7 +6,7 @@ const Section = (props: SectionProps) => {
   const { children } = props
 
   return (
-    <section className="flex h-screen w-screen flex-col items-center justify-center">
+    <section className="flex h-screen w-full flex-col items-center justify-center">
       {children}
     </section>
   )
