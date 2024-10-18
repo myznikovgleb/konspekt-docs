@@ -1,6 +1,7 @@
-import { MegaphoneIcon } from '@heroicons/react/24/solid'
 import * as Dialog from '@radix-ui/react-dialog'
+import * as Progress from '@radix-ui/react-progress'
 import { clsx } from 'clsx'
+import { useEffect, useState } from 'react'
 
 import type { Gradient } from '../model/story-model'
 
@@ -8,54 +9,48 @@ interface StoryCardProps {
   heading: string
   content: string
   gradient: Gradient
+  onProgress: () => void
 }
 
 const StoryCard = (props: StoryCardProps) => {
-  const { heading, content, gradient } = props
+  const { heading, content, gradient, onProgress } = props
+
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (progress === 100) {
+        clearInterval(timer)
+        onProgress()
+      }
+
+      setProgress((prevProgress) => Math.min(prevProgress + 1, 100))
+    }, 10)
+
+    return () => clearInterval(timer)
+  }, [progress, onProgress])
 
   return (
-    <div className="cursor-pointer select-none">
-      <div className="flex w-20 items-center justify-center md:w-28">
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <button
-              className={clsx(
-                'gradient-border flex size-16 items-center justify-center rounded-full border-4 border-primary-content/80 hover:border-primary-content/50',
-                gradient
-              )}
-            >
-              <div
-                className={clsx(
-                  'gradient flex size-14 items-center justify-center rounded-full',
-                  gradient
-                )}
-              >
-                <MegaphoneIcon className="size-8 text-primary-content" />
-              </div>
-            </button>
-          </Dialog.Trigger>
-          <Dialog.Portal>
-            <Dialog.Overlay className="fixed inset-0 bg-base-100/50" />
-            <Dialog.Content className="modal-box fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-0 focus:outline-none">
-              <div
-                className={clsx(
-                  'gradient card-body h-96 text-primary-content',
-                  gradient
-                )}
-              >
-                <div className="flex flex-col gap-16">
-                  <progress className="progress w-full" />
-                  <Dialog.Title className="text-3xl font-semibold">
-                    {heading}
-                  </Dialog.Title>
-                  <Dialog.Description className="text-xl">
-                    {content}
-                  </Dialog.Description>
-                </div>
-              </div>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
+    <div
+      className={clsx('gradient card-body h-96 text-primary-content', gradient)}
+    >
+      <div className="flex flex-col gap-16">
+        <Progress.Root
+          className="h-2 w-full overflow-hidden rounded-full bg-base-100/50"
+          style={{
+            transform: 'translateZ(0)',
+          }}
+          value={progress}
+        >
+          <Progress.Indicator
+            className="size-full bg-base-100"
+            style={{ transform: `translateX(-${100 - progress}%)` }}
+          />
+        </Progress.Root>
+        <Dialog.Title className="text-3xl font-semibold">
+          {heading}
+        </Dialog.Title>
+        <Dialog.Description className="text-xl">{content}</Dialog.Description>
       </div>
     </div>
   )

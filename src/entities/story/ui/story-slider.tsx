@@ -5,10 +5,10 @@ import useEmblaCarousel from 'embla-carousel-react'
 
 import { useStoryStore } from '../model'
 
-import { StoryCard } from './story-card'
+import { StoryComponent } from './story-component'
 
 const StorySlider = () => {
-  const { stories } = useStoryStore((state) => state)
+  const { stories, view } = useStoryStore((state) => state)
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     dragFree: true,
@@ -42,12 +42,16 @@ const StorySlider = () => {
       </div>
       <div className="max-w-xs overflow-hidden py-2 md:max-w-md" ref={emblaRef}>
         <div className="flex">
-          {stories.map(({ id, heading, content, gradient }) => (
-            <StoryCard
+          {stories.map(({ id, heading, content, gradient, isViewed }) => (
+            <StoryComponent
               key={id}
               heading={heading}
               content={content}
               gradient={gradient}
+              isViewed={isViewed}
+              view={() => {
+                view(id)
+              }}
             />
           ))}
         </div>

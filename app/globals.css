@@ -13,6 +13,9 @@
     &.pink-indigo {
       @apply bg-gradient-to-tr from-pink-300 to-indigo-500;
     }
+    &.mono {
+      @apply bg-gradient-to-tr from-neutral-300 to-neutral-500;
+    }
   }
 
   .gradient-border {
@@ -24,6 +27,9 @@
     }
     &.pink-indigo {
       @apply bg-indigo-500;
+    }
+    &.mono {
+      @apply bg-neutral-500;
     }
   }
 }

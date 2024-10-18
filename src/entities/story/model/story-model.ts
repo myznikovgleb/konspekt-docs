@@ -69,10 +69,16 @@ const createStoryStore = (initState: StoryState = defaultInitState) =>
     ...initState,
     view: (id: string) =>
       set((state) => {
-        const stories = state.stories.map((story) => ({
-          ...story,
-          isViewed: story.id === id,
-        }))
+        const stories = state.stories.map((story) => {
+          if (story.id !== id) {
+            return story
+          }
+
+          return {
+            ...story,
+            isViewed: true,
+          }
+        })
 
         return { stories }
       }),
