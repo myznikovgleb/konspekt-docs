@@ -1,3 +1,5 @@
+import { StoryStoreProvider } from '@/src/entities/story'
+
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
@@ -24,7 +26,9 @@ export default function Layout(props: LayoutProps) {
 
   return (
     <html lang="en">
-      <body className="overflow-x-hidden">{children}</body>
+      <body>
+        <StoryStoreProvider>{children}</StoryStoreProvider>
+      </body>
     </html>
   )
 }

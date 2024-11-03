@@ -85,7 +85,7 @@ const FeedbackSection = () => {
 
   return (
     <Section>
-      <div className="card w-96 text-lg md:shadow-lg md:shadow-base-300">
+      <div className="card w-full text-lg md:max-w-md md:shadow-lg md:shadow-base-300">
         <form onSubmit={onSubmit} className="card-body gap-6">
           <FeedbackEmailInput
             disabled={state !== 'edit'}
