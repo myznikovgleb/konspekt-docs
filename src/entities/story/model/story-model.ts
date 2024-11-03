@@ -1,89 +1,150 @@
 import { nanoid } from 'nanoid'
 import { createStore } from 'zustand'
 
-type Gradient = 'yellow-orange' | 'blue-emerald' | 'pink-indigo'
+type StoryIcon = 'bolt' | 'megaphone' | 'rocket' | 'sparkles' | 'star'
 
 type Story = {
   id: string
+  nextId: string | null
+  prevId: string | null
   heading: string
   content: string
-  gradient: Gradient
+  icon: StoryIcon
   isViewed: boolean
 }
 
 type StoryState = {
-  stories: Story[]
+  ids: string[]
+  entities: { [key: string]: Story }
+  activeStoryId: string | null
 }
 
 type StoryActions = {
-  view: (id: string) => void
+  play: (id: string) => void
+  stop: (id: string) => void
+  next: (id: string) => void
+  prev: (id: string) => void
 }
 
 type StoryStore = StoryState & StoryActions
 
-const defaultInitState: StoryState = {
-  stories: [
+const defaultInitState: StoryState = (() => {
+  const stories: Story[] = [
     {
       id: nanoid(),
+      nextId: null,
+      prevId: null,
       heading: 'Welcome',
       content: 'Welcome to Konspekt Docs!',
-      gradient: 'yellow-orange',
+      icon: 'rocket',
       isViewed: false,
     },
     {
       id: nanoid(),
-      heading: 'The Konspekt team',
+      nextId: null,
+      prevId: null,
+      heading: 'Konspekt Docs?',
+      content: 'Konspekt Docs\nis a documentation for\nKonspekt App.',
+      icon: 'star',
+      isViewed: false,
+    },
+    {
+      id: nanoid(),
+      nextId: null,
+      prevId: null,
+      heading: 'Konspekt App?',
       content:
-        'The Konspekt team is happy to announce a Konspekt App and Konspekt Docs launch!',
-      gradient: 'blue-emerald',
+        'Konspekt App\nis a note-taking app\nsignificantly charged with magic.',
+      icon: 'sparkles',
       isViewed: false,
     },
     {
       id: nanoid(),
-      heading: 'Konspekt App',
+      nextId: null,
+      prevId: null,
+      heading: 'Konspekt team',
       content:
-        'Konspekt App is a note-taking app significantly charged with magic.',
-      gradient: 'pink-indigo',
+        'The Konspekt team\ncontinues to provide\nthe best user experience\nbut with Konspekt Docs now.',
+      icon: 'bolt',
       isViewed: false,
     },
     {
       id: nanoid(),
-      heading: 'What happens?',
-      content:
-        'Konspekt team makes stories to provide project updates in most convenient way.',
-      gradient: 'yellow-orange',
-      isViewed: false,
-    },
-    {
-      id: nanoid(),
+      nextId: null,
+      prevId: null,
       heading: 'Stay tuned',
-      content: 'A lot of new stories on the way!',
-      gradient: 'blue-emerald',
+      content: 'A lot of new things\non the way!',
+      icon: 'megaphone',
       isViewed: false,
     },
-  ],
-}
+  ]
+
+  stories.forEach((story, index) => {
+    if (index < stories.length - 1) {
+      story.nextId = stories[index + 1].id
+    }
+
+    if (index > 0) {
+      story.prevId = stories[index - 1].id
+    }
+  })
+
+  const ids = stories.map(({ id }) => id)
+
+  const entities = stories.reduce<{ [key: string]: Story }>(
+    (prevValue, story) => ({ ...prevValue, [story.id]: story }),
+    {}
+  )
+
+  return { ids, entities, activeStoryId: null }
+})()
 
 const createStoryStore = (initState: StoryState = defaultInitState) =>
   createStore<StoryStore>()((set) => ({
     ...initState,
-    view: (id: string) =>
+
+    play: (id: string) =>
       set((state) => {
-        const stories = state.stories.map((story) => {
-          if (story.id !== id) {
-            return story
-          }
+        return { ...state, activeStoryId: id }
+      }),
 
-          return {
-            ...story,
-            isViewed: true,
-          }
-        })
+    stop: (id: string) =>
+      set((state) => {
+        return {
+          ...state,
+          entities: {
+            ...state.entities,
+            [id]: { ...state.entities[id], isViewed: true },
+          },
+          activeStoryId: null,
+        }
+      }),
 
-        return { stories }
+    next: (id: string) =>
+      set((state) => {
+        return {
+          ...state,
+          entities: {
+            ...state.entities,
+            [id]: { ...state.entities[id], isViewed: true },
+          },
+          activeStoryId: state.entities[id].nextId,
+        }
+      }),
+
+    prev: (id: string) =>
+      set((state) => {
+        return {
+          ...state,
+          entities: {
+            ...state.entities,
+            [id]: { ...state.entities[id], isViewed: true },
+          },
+          activeStoryId: state.entities[id].prevId,
+        }
       }),
   }))
 
-export type { Gradient, StoryStore }
+export type { StoryIcon, StoryStore }
 
 export { createStoryStore }

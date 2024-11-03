@@ -8,7 +8,7 @@ import { useStoryStore } from '../model'
 import { StoryComponent } from './story-component'
 
 const StorySlider = () => {
-  const { stories, view } = useStoryStore((state) => state)
+  const { ids, activeStoryId } = useStoryStore((state) => state)
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     dragFree: true,
@@ -42,17 +42,8 @@ const StorySlider = () => {
       </div>
       <div className="max-w-xs overflow-hidden py-2 md:max-w-md" ref={emblaRef}>
         <div className="flex">
-          {stories.map(({ id, heading, content, gradient, isViewed }) => (
-            <StoryComponent
-              key={id}
-              heading={heading}
-              content={content}
-              gradient={gradient}
-              isViewed={isViewed}
-              view={() => {
-                view(id)
-              }}
-            />
+          {ids.map((id) => (
+            <StoryComponent key={id} id={id} isOpened={id === activeStoryId} />
           ))}
         </div>
       </div>

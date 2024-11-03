@@ -1,56 +1,68 @@
+import { XMarkIcon } from '@heroicons/react/24/solid'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as Progress from '@radix-ui/react-progress'
-import { clsx } from 'clsx'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-import type { Gradient } from '../model/story-model'
+import { useInterval } from '@/src/shared/lib'
 
 interface StoryCardProps {
   heading: string
   content: string
-  gradient: Gradient
   onProgress: () => void
 }
 
 const StoryCard = (props: StoryCardProps) => {
-  const { heading, content, gradient, onProgress } = props
+  const { heading, content, onProgress } = props
 
   const [progress, setProgress] = useState(0)
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (progress === 100) {
-        clearInterval(timer)
-        onProgress()
+  useInterval(
+    () => {
+      const nextProgress = progress + 1 / 16
+
+      setProgress(nextProgress)
+
+      if (nextProgress < 100) {
+        return
       }
 
-      setProgress((prevProgress) => Math.min(prevProgress + 1, 100))
-    }, 10)
-
-    return () => clearInterval(timer)
-  }, [progress, onProgress])
+      onProgress()
+    },
+    progress < 100 ? 10 : null
+  )
 
   return (
-    <div
-      className={clsx('gradient card-body h-96 text-primary-content', gradient)}
-    >
-      <div className="flex flex-col gap-16">
-        <Progress.Root
-          className="h-2 w-full overflow-hidden rounded-full bg-base-100/50"
-          style={{
-            transform: 'translateZ(0)',
-          }}
-          value={progress}
-        >
-          <Progress.Indicator
-            className="size-full bg-base-100"
-            style={{ transform: `translateX(-${100 - progress}%)` }}
-          />
-        </Progress.Root>
-        <Dialog.Title className="text-3xl font-semibold">
-          {heading}
-        </Dialog.Title>
-        <Dialog.Description className="text-xl">{content}</Dialog.Description>
+    <div className="fixed left-1/2 top-1/2 z-10 h-full w-full -translate-x-1/2 -translate-y-1/2 p-0 focus:outline-none md:h-[42rem] md:max-h-full md:w-[28rem]">
+      <div className="flex h-full w-full flex-col bg-gradient-to-tr from-yellow-300 to-orange-500 p-8 text-primary-content md:rounded-md md:shadow-lg">
+        <div className="flex h-1/2 w-full flex-col gap-4">
+          <Progress.Root
+            className="h-2 w-full overflow-hidden rounded-full bg-base-100/50"
+            style={{
+              transform: 'translateZ(0)',
+            }}
+            value={progress}
+          >
+            <Progress.Indicator
+              className="size-full bg-base-100"
+              style={{ transform: `translateX(-${100 - progress}%)` }}
+            />
+          </Progress.Root>
+          <div className="flex w-full flex-col items-end">
+            <Dialog.Close asChild>
+              <button className="btn btn-circle btn-ghost bg-base-content/20 md:btn-lg md:bg-transparent">
+                <XMarkIcon className="size-8 stroke-[2.5] text-base-100" />
+              </button>
+            </Dialog.Close>
+          </div>
+        </div>
+        <div className="flex h-1/2 w-full flex-col items-start gap-8 whitespace-pre-line py-16">
+          <Dialog.Title className="text-4xl font-semibold">
+            {heading}
+          </Dialog.Title>
+          <Dialog.Description className="text-2xl">
+            {content}
+          </Dialog.Description>
+        </div>
       </div>
     </div>
   )
